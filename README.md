@@ -28,7 +28,7 @@ This solution written in Python uses the following components:
 	3. uses the VenmoGraph Instance to process this batch
 	4. the results is the list of degree updates applied to the graph
 	5. they are all processed by the MedianTracker to make the list of degrees current
-	6. it then returns the rolling median that is written to stdout
+	6. the tracker then returns the rolling median that is written to stdout
 
 Unit tests are located in **unit_test/** and depend on the [nose](http://nose.readthedocs.io/en/latest/) library.
 
