@@ -115,10 +115,10 @@ the updated graph would be:
 For each new message, we increase counts and create new neighbors similarly.
 
 After processing all the messages from a transaction, the VenmoGraph instance computes a list of updates.
-For each node that was in a message, It compares its new degree with the degree before the transaction.
+For each node that was at least in a message, it compares its new degree with the degree before the transaction.
 If they are different an update is added to this list.
 
-There are 4 types of update message:
+There are 4 types of update message returned by the VenmoGraph:
 - new node: when a node is created its degree goes from 0 to 1.
 	The degree can't go higher as only one new message is received per transaction
 	the update is a tuple: `(0, 1)`
@@ -146,14 +146,14 @@ A MedianTracker instance has the following components:
 - a tuple keeping pointers to the median elements. If the nodes length is odd, there is only one median elements, if it is even there are two.
 
 For each type of update the tracker handles it differently:
-- a new node (`(0, 1)`) is inserted on top of the (possibly empty) stack of nodes with degree 1. There are few cases handled in constant time for each operation.
-- an obsolete node is removed linking the nodes above and below together (both up and down).
+- a new node (`(0, 1)`) is inserted at the bottom (after `(0, 0)`) or on top of the (possibly empty) stack of nodes with degree 1. These two cases are both handled in constant time.
+- an obsolete node is removed linking the nodes above and below together (in both direction, up and down).
 - a degree increase is executed as a node removal and insertion.
   As the increase could be only by 1, the operation is efficient and requires a fixed number of operations
 - similarly for a degree decrease we first remove the node and then we put it back.
   In this case however the decrease is not limited and the computational complexity of this operation is `O(decrease)` where `decrease` is the difference between the degree before and after. The `decrease` as noted before is limited by the number of obsolete transactions received.
 
-When a node is inserted or removed (also temporarily as in the increase and decrease operations), the median elements are updated depending on position in which the node was or is now.
+When a node is inserted or removed (also temporarily as in the increase and decrease operations), the median elements are updated depending on the position in which the node was or is now.
 
 ###Performance Analysis
 
@@ -161,7 +161,7 @@ For a single transaction, each processing step has complexity `O(1) + O(#obsolet
 
 `N` transactions have then total complexity `O(N) + O(sum(#obsolete-transactions))`.
 
-Given that a single message is processed as obsolete at most once we have that:
+Given that a single message is processed as obsolete at most once, we have that:
 `sum(#obsolete-transactions) < N` and the complexity is then `O(N)` for the `N` transactions.
 
 ###Other test tools
