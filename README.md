@@ -26,9 +26,9 @@ This solution written in Python uses the following components:
   	1. for each line from stdin, uses the OpsStorage instance to process the transaction
 	2. gets from it a batch of new and obsolete messages
 	3. uses the VenmoGraph Instance to process this batch
-	4. the results is a list of degree updates
-	5. they are all processed by the MedianTracker that returns the rolling median
-	6. the median is written to stdout
+	4. the results is the list of degree updates applied to the graph
+	5. they are all processed by the MedianTracker to make the list of degrees current
+	6. it then returns the rolling median that is written to stdout
 
 Unit tests are located in **unit_test/** and depend on the [nose](http://nose.readthedocs.io/en/latest/) library.
 
