@@ -6,11 +6,16 @@ from opsstorage import OpsStorage, OpsStorageException
 from venmograph import VenmoGraph
 
 def main(input_stream, output_stream, debug=False, MedianTrackerClass=MedianTracker):
+    """This methods executes the following steps:
+    1) for each line from the input_stream, uses the OpsStorage instance to process the transaction
+    2) gets from it a batch of new and obsolete messages
+    3) uses the VenmoGraph Instance to process this batch
+    4) the results is a list of degree updates
+    5) they are all processed by the MedianTracker that returns the rolling median
+    6) the median is written to the output_stream"""
     ops = OpsStorage()
     graph = VenmoGraph()
     tracker = MedianTrackerClass()
-    if debug:
-        max_size_ops = 0
     for line in input_stream:
         try:
             message = json.loads(line)
